@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MindMate Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    .card { border: 1px solid #ccc; padding: 20px; width: 300px; margin: auto; }
+    button { padding: 10px 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>MindMate – Student Wellness Assistant</h1>
+  <div class="card">
+    <p>Enter your daily stats:</p>
+    <input id="heartRate" type="number" placeholder="Heart Rate (bpm)" /><br><br>
+    <input id="sleepHours" type="number" placeholder="Sleep Hours" /><br><br>
+    <button onclick="analyze()">Analyze Stress</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    async function analyze() {
+      const heartRate = document.getElementById("heartRate").value;
+      const sleepHours = document.getElementById("sleepHours").value;
+
+      const response = await fetch("http://localhost:5000/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ heart_rate: parseInt(heartRate), sleep_hours: parseInt(sleepHours) })
+      });
+
+      const data = await response.json();
+      document.getElementById("result").innerText =
+        `Stress Level: ${data.stress_level}\nRecommendation: ${data.recommendation}`;
+    }
+  </script>
+</body>
+</html>
