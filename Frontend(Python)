@@ -1,0 +1,30 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Simple AI-like stress detection (mock example)
+def detect_stress(heart_rate, sleep_hours):
+    if heart_rate > 100 or sleep_hours < 5:
+        return "High Stress"
+    elif 70 <= heart_rate <= 100 and sleep_hours >= 6:
+        return "Moderate Stress"
+    else:
+        return "Low Stress"
+
+@app.route('/analyze', methods=['POST'])
+def analyze():
+    data = request.json
+    heart_rate = data.get("heart_rate", 80)
+    sleep_hours = data.get("sleep_hours", 7)
+
+    stress_level = detect_stress(heart_rate, sleep_hours)
+
+    return jsonify({
+        "heart_rate": heart_rate,
+        "sleep_hours": sleep_hours,
+        "stress_level": stress_level,
+        "recommendation": "Take a short break" if stress_level == "High Stress" else "Keep studying!"
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)
